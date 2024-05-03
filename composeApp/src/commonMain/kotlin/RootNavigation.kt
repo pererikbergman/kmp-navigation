@@ -1,10 +1,11 @@
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.List
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraphBuilder
@@ -13,7 +14,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import arguments.addArgumentExampleScreen
 import components.BottomNavigationBarContent
+import components.ModalBottomSheetContent
 import dialog.DialogExampleScreen
+import kotlinx.coroutines.launch
 import tab.TabNavScreen
 
 sealed class RootScreen(var route: String, val icon: ImageVector?, var title: String) {
@@ -22,14 +25,38 @@ sealed class RootScreen(var route: String, val icon: ImageVector?, var title: St
     data object Arguments : RootScreen("arguments", Icons.Rounded.Info, "Arguments")
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RootNavigation(
     navController: NavHostController
 ) {
+    val scope = rememberCoroutineScope()
+
+    // Bottom Sheet
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     Scaffold(
         bottomBar = {
             BottomNavigationBarContent(
                 navController = navController,
+            )
+        },
+        floatingActionButton = {
+            //FloatingActionButton(
+            //    onClick = {
+            //        showBottomSheet = true
+            //    }
+            //) {
+            //    Icon(Icons.Filled.Add, contentDescription = "")
+            //}
+
+            ExtendedFloatingActionButton(
+                text = { Text("Show bottom sheet") },
+                icon = { Icon(Icons.Filled.Add, contentDescription = "") },
+                onClick = {
+                    showBottomSheet = true
+                }
             )
         }
     ) { innerPadding ->
@@ -37,6 +64,23 @@ fun RootNavigation(
             addTabNavExampleScreen(Modifier.padding(innerPadding))
             addDialogExampleScreen(Modifier.padding(innerPadding))
             addArgumentExampleScreen(Modifier.padding(innerPadding), navController)
+        }
+    }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showBottomSheet = false
+            },
+            sheetState = sheetState
+        ) {
+            ModalBottomSheetContent {
+                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        showBottomSheet = false
+                    }
+                }
+            }
         }
     }
 }
