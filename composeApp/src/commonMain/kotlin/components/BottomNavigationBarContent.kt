@@ -9,7 +9,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BottomNavigationBarContent(
-    navController: NavController
+    navController: NavController,
 ) {
     BottomNavigationBarContent { item ->
         navController.navigate(item.route) {
@@ -64,7 +64,7 @@ fun BottomNavigationBarContent(
 @Preview
 @Composable
 fun BottomNavigationBarContentPreview() {
-    BottomNavigationBarContent() {
+    BottomNavigationBarContent {
 
     }
 }

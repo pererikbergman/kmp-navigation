@@ -1,3 +1,5 @@
+import androidx.compose.animation.*
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.List
@@ -8,6 +10,7 @@ import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import arguments.addArgumentExampleScreen
 import components.BottomNavigationBarContent
+import components.DrawerContent
 import components.ModalBottomSheetContent
 import dialog.DialogExampleScreen
 import kotlinx.coroutines.launch
@@ -33,58 +37,67 @@ fun RootNavigation(
 ) {
     val scope = rememberCoroutineScope()
 
+    // Drawer Menu
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
     // Bottom Sheet
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("App Navigation") },
-
+    ModalNavigationDrawer(
+        drawerContent = {
+            DrawerContent(
+                modifier = Modifier.fillMaxWidth(0.75f)
+            ) { scope.launch { drawerState.close() } }
+        },
+        scrimColor = Color.Black.copy(alpha = 0.32f),
+        drawerState = drawerState
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("App Navigation") },
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(Icons.Filled.Menu, contentDescription = "Menu")
+                        }
+                    }
                 )
-        },
-        bottomBar = {
-            BottomNavigationBarContent(
-                navController = navController,
-            )
-        },
-        floatingActionButton = {
-            //FloatingActionButton(
-            //    onClick = {
-            //        showBottomSheet = true
-            //    }
-            //) {
-            //    Icon(Icons.Filled.Add, contentDescription = "")
-            //}
-
-            ExtendedFloatingActionButton(
-                text = { Text("Show bottom sheet") },
-                icon = { Icon(Icons.Filled.Add, contentDescription = "") },
-                onClick = {
-                    showBottomSheet = true
-                }
-            )
-        }
-    ) { innerPadding ->
-        NavHost(navController, startDestination = RootScreen.TabNavExample.route) {
-            addTabNavExampleScreen(Modifier.padding(innerPadding))
-            addDialogExampleScreen(Modifier.padding(innerPadding))
-            addArgumentExampleScreen(Modifier.padding(innerPadding), navController)
-        }
-    }
-
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                showBottomSheet = false
             },
-            sheetState = sheetState
-        ) {
-            ModalBottomSheetContent {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        showBottomSheet = false
+            bottomBar = {
+                BottomNavigationBarContent(
+                    navController = navController,
+                )
+            },
+            floatingActionButton = {
+                ExtendedFloatingActionButton(
+                    text = { Text("Show bottom sheet") },
+                    icon = { Icon(Icons.Filled.Add, contentDescription = "") },
+                    onClick = {
+                        showBottomSheet = true
+                    }
+                )
+            }
+        ) { innerPadding ->
+            NavHost(navController, startDestination = RootScreen.TabNavExample.route) {
+                addTabNavExampleScreen(Modifier.padding(innerPadding))
+                addDialogExampleScreen(Modifier.padding(innerPadding))
+                addArgumentExampleScreen(Modifier.padding(innerPadding), navController)
+            }
+        }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheet = false
+                },
+                sheetState = sheetState
+            ) {
+                ModalBottomSheetContent {
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
                     }
                 }
             }
