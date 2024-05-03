@@ -2,6 +2,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.*
@@ -37,6 +38,12 @@ fun RootNavigation(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("App Navigation") },
+
+                )
+        },
         bottomBar = {
             BottomNavigationBarContent(
                 navController = navController,
