@@ -13,7 +13,9 @@ import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun DialogExampleScreen(modifier: Modifier = Modifier) {
+fun DialogExampleScreen(
+    modifier: Modifier = Modifier
+) {
     // State to manage the visibility of the dialog
     var showDialog by remember { mutableStateOf(false) }
 
@@ -35,7 +37,9 @@ fun DialogExampleScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun DialogContent(onClose: () -> Unit) {
+private fun DialogContent(
+    onClose: () -> Unit
+) {
     // Material Surface for the dialog content
     Surface {
         Column(

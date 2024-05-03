@@ -11,7 +11,10 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun InputScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
+fun InputScreen(
+    modifier: Modifier = Modifier,
+    onClick: (String) -> Unit
+) {
     var name by remember { mutableStateOf("") }
 
     Column(

@@ -14,8 +14,23 @@ sealed class ArgumentScreen(var route: String) {
 }
 
 @Composable
-fun ArgumentExampleScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+fun ArgumentExampleScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
     NavHost(navController, startDestination = ArgumentScreen.Input.route) {
+        addArgumentExampleScreen(modifier, navController)
+    }
+}
+
+fun NavGraphBuilder.addArgumentExampleScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
+    navigation(
+        startDestination = ArgumentScreen.Input.route,
+        route = RootScreen.Arguments.route
+    ) {
         addInputScreen(modifier, navController)
         addOutputScreen(modifier, navController)
     }

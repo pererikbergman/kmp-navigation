@@ -12,7 +12,10 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun TabNavScreen(modifier: Modifier = Modifier, startTabIdx: Int = 0) {
+fun TabNavScreen(
+    modifier: Modifier = Modifier,
+    startTabIdx: Int = 0
+) {
     var tabIndex by remember { mutableStateOf(startTabIdx) }
     val tabTitles = listOf("Tab 1", "Tab 2", "Tab 3")
 
