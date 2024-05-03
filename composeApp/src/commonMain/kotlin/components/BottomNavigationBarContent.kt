@@ -10,6 +10,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun BottomNavigationBarContent(
     navController: NavController,
+    onItemClicked: (RootScreen) -> Unit
 ) {
     BottomNavigationBarContent { item ->
         navController.navigate(item.route) {
@@ -20,6 +21,7 @@ fun BottomNavigationBarContent(
             }
             launchSingleTop = true
             restoreState = true
+            onItemClicked(item)
         }
     }
 }

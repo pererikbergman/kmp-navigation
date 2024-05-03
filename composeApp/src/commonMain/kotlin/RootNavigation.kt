@@ -44,6 +44,8 @@ fun RootNavigation(
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
 
+    var fabVisible by remember { mutableStateOf(true) }
+
     ModalNavigationDrawer(
         drawerContent = {
             DrawerContent(
@@ -67,16 +69,24 @@ fun RootNavigation(
             bottomBar = {
                 BottomNavigationBarContent(
                     navController = navController,
-                )
+                ) { item ->
+                    fabVisible = item == RootScreen.TabNavExample
+                }
             },
             floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    text = { Text("Show bottom sheet") },
-                    icon = { Icon(Icons.Filled.Add, contentDescription = "") },
-                    onClick = {
-                        showBottomSheet = true
-                    }
-                )
+                AnimatedVisibility(
+                    visible = fabVisible,
+                    enter = expandHorizontally(),
+                    exit = shrinkHorizontally(),
+                ) {
+                    ExtendedFloatingActionButton(
+                        text = { Text("Show bottom sheet") },
+                        icon = { Icon(Icons.Filled.Add, contentDescription = "") },
+                        onClick = {
+                            showBottomSheet = true
+                        }
+                    )
+                }
             }
         ) { innerPadding ->
             NavHost(navController, startDestination = RootScreen.TabNavExample.route) {
@@ -116,3 +126,4 @@ private fun NavGraphBuilder.addDialogExampleScreen(modifier: Modifier = Modifier
         DialogExampleScreen(modifier)
     }
 }
+            
